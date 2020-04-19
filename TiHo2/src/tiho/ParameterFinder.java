@@ -19,23 +19,27 @@ public class ParameterFinder
 	private FileInputStream f;
 	private XSSFWorkbook workbook;
 	private XSSFSheet sheet;
-	
+
 	private List<String> parameters;
 	private String[] parameterArray;
-	
+
 	public ParameterFinder(String path)
 	{
 		getFileWBSheet(path);
-		
+		retrieveParametersFromFile();
+	}
+
+	private void retrieveParametersFromFile()
+	{
 		parameters = new ArrayList<String>();
-		
+
 		Iterator<Row> rowIterator = sheet.rowIterator();
-		
+
 		while(rowIterator.hasNext())
 		{
 			Row row = rowIterator.next();
 			Cell cell = row.getCell(0);
-			
+
 			if(cell.getCellTypeEnum() == CellType.STRING)
 			{
 				String cellValue = cell.getStringCellValue();
@@ -48,35 +52,39 @@ public class ParameterFinder
 				}
 			}
 		}
-		
+
 		parameterArray = convertToArray(parameters, parameterArray);
 	}
-	
+
 	private String[] convertToArray(List<String> parameterList, String[] parameterArray)
 	{
 		parameterArray = new String[parameterList.size()];
-		parameterArray = (String[]) parameterList.toArray();
-		
+
+		for(int i = 0; i < parameterList.size(); i++)
+		{
+			parameterArray[i] = parameterList.get(i);
+		}
+
 		return parameterArray;
 	}
-	
+
 	private void getFileWBSheet(String path)
 	{
 		try
 		{
 			f = new FileInputStream(path);
-			
+
 			workbook = new XSSFWorkbook(f);
-			
+
 			sheet = workbook.getSheetAt(0);
-			
+
 		} catch(Exception e)
 		{
 			JOptionPane.showMessageDialog(new JFrame(), "Die Datei konnte nicht geladen werden!");
 			e.printStackTrace();
 		}
 	}
-	
+
 	public String[] getParameters()
 	{
 		return parameterArray;

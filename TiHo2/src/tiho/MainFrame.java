@@ -23,6 +23,8 @@ public class MainFrame extends JFrame
 	private JButton confirmButton;
 	private String fileAbsolutePath = "";
 	private boolean allParameters = true;
+	
+	private ParameterFinder paramFinder;
 
 	public MainFrame()
 	{
@@ -32,6 +34,8 @@ public class MainFrame extends JFrame
 		framePanel = new JPanel();
 		confirmButton = new JButton("OK");
 		
+		paramFinder = null;
+		
 		setFrameSettings();
 		setComponentLayout();
 		
@@ -40,9 +44,21 @@ public class MainFrame extends JFrame
 			public void actionPerformed(ActionEvent e)
 			{
 				fileAbsolutePath = choosePanel.getFileAbsolutePath();
+				
+				paramFinder = new ParameterFinder(fileAbsolutePath);
+				
 				allParameters = choosePanel.isAllParameters();
+				if(!allParameters)
+				{
+					setupParameterPanel(paramFinder.getParameters());
+				}
 			}
 		});
+	}
+	
+	private void setupParameterPanel(String[] parameters)
+	{
+		// Parameter Panel setup code
 	}
 	
 	private void setProgramLookAndFeel()
