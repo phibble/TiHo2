@@ -32,7 +32,7 @@ public class MainFrame extends JFrame
 			e.printStackTrace();
 		}
 		
-		setSize(360, 130);
+		setSize(360, 145);
 		setVisible(true);
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
