@@ -16,7 +16,6 @@ import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
-import javax.swing.border.Border;
 
 public class ChoosePanel extends JPanel
 {
@@ -25,7 +24,6 @@ public class ChoosePanel extends JPanel
 	private JComboBox<String> fileName;
 	private DefaultComboBoxModel<String> fileNameModel;
 	private JLabel fileNameLabel;
-	private JButton confirmButton;
 	private JButton searchButton;
 	private JFileChooser fileChooser;
 
@@ -34,11 +32,16 @@ public class ChoosePanel extends JPanel
 	private ButtonGroup allRadioGroup;
 	private JPanel radioPanel;
 
+	private String fileAbsolutePath = "";
+
+	private boolean isConfirmPressed = false;
+
+	private boolean allParameters = true;
+
 	public ChoosePanel()
 	{
 		fileName = new JComboBox<String>();
 		fileNameLabel = new JLabel("Datei: ");
-		confirmButton = new JButton("OK");
 		searchButton = new JButton("...");
 		fileChooser = new JFileChooser();
 
@@ -70,25 +73,29 @@ public class ChoosePanel extends JPanel
 			{
 				if(fileChooser.showOpenDialog(ChoosePanel.this) == JFileChooser.APPROVE_OPTION)
 				{
-					fileNameModel.addElement(fileChooser.getSelectedFile().getAbsolutePath());
+					fileAbsolutePath = fileChooser.getSelectedFile().getAbsolutePath();
+					fileNameModel.addElement(fileAbsolutePath);
 					fileNameModel.removeElementAt(0);
 					fileName.setSelectedIndex(fileNameModel.getSize() - 1);
 				}
 			}
 		});
 
-		confirmButton.addActionListener(new ActionListener()
+		allRadio.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-
+				allParameters = true;
 			}
 		});
 
-		Border innerBorder = BorderFactory.createEtchedBorder();
-		Border outerBorder = BorderFactory.createEmptyBorder(1, 1, 1, 1);
-		setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
-		setPreferredSize(new Dimension(295, 195));
+		someRadio.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				allParameters = false;
+			}
+		});
 
 		setComponentLayout();
 	}
@@ -108,15 +115,15 @@ public class ChoosePanel extends JPanel
 		gc.gridy = 0;
 
 		gc.gridx = 1;
-		gc.anchor = GridBagConstraints.CENTER;
+		gc.anchor = GridBagConstraints.LINE_START;
 		add(fileName, gc);
 
 		gc.gridx = 0;
-		gc.anchor = GridBagConstraints.LINE_END;
+		gc.anchor = GridBagConstraints.LINE_START;
 		add(fileNameLabel, gc);
 
 		gc.gridx = 2;
-		gc.anchor = GridBagConstraints.LINE_START;
+		gc.anchor = GridBagConstraints.CENTER;
 		gc.weightx = 2;
 		add(searchButton, gc);
 
@@ -128,13 +135,20 @@ public class ChoosePanel extends JPanel
 		gc.weighty = 1;
 		gc.anchor = GridBagConstraints.LINE_START;
 		add(radioPanel, gc);
+	}
 
-		// NEXT ROW
-		gc.gridy += 2;
-		gc.gridx = 0;
-		gc.gridwidth = 3;
-		gc.weighty = 2;
-		gc.anchor = GridBagConstraints.NORTH;
-		add(confirmButton, gc);
+	public boolean isConfirmPressed()
+	{
+		return isConfirmPressed;
+	}
+
+	public String getFileAbsolutePath()
+	{
+		return fileAbsolutePath;
+	}
+	
+	public boolean isAllParameters()
+	{
+		return allParameters;
 	}
 }
