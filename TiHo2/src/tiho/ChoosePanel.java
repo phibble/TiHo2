@@ -34,8 +34,6 @@ public class ChoosePanel extends JPanel
 
 	private String fileAbsolutePath = "";
 
-	private boolean isConfirmPressed = false;
-
 	private boolean allParameters = true;
 
 	public ChoosePanel()
@@ -135,11 +133,6 @@ public class ChoosePanel extends JPanel
 		gc.weighty = 1;
 		gc.anchor = GridBagConstraints.LINE_START;
 		add(radioPanel, gc);
-	}
-
-	public boolean isConfirmPressed()
-	{
-		return isConfirmPressed;
 	}
 
 	public String getFileAbsolutePath()
