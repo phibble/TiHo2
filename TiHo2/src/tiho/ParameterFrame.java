@@ -3,6 +3,7 @@ package tiho;
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -81,11 +82,12 @@ public class ParameterFrame extends JFrame
 		gc.gridwidth = 1;
 
 		gc.gridx = 1;
-		gc.anchor = GridBagConstraints.CENTER;
+		gc.anchor = GridBagConstraints.LINE_END;
+		gc.insets = new Insets(0, 15, 0, 15);
 		mainPanel.add(confirmButton, gc);
 
 		gc.gridx = 0;
-		gc.anchor = GridBagConstraints.CENTER;
+		gc.anchor = GridBagConstraints.LINE_START;
 		mainPanel.add(backButton, gc);
 
 		setLayout(new BorderLayout());
@@ -94,7 +96,7 @@ public class ParameterFrame extends JFrame
 
 	private void setFrame()
 	{
-		setSize(200, 300);
+		setSize(190, 300);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
 		setResizable(false);

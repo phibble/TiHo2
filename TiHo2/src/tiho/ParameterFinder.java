@@ -82,8 +82,6 @@ public class ParameterFinder
 		}
 		
 		parameters = temp2;
-		
-		System.out.println(parameters);
 	}
 
 	private String[] convertToArray(List<String> parameterList, String[] parameterArray)

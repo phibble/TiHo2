@@ -2,6 +2,7 @@ package tiho;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -38,13 +39,42 @@ public class ParameterChooserPanel extends JPanel
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-
-				for(JCheckBox box : boxes)
+				boolean[] areSelected = new boolean[boxes.length];
+				for(int i = 0; i < areSelected.length; i++)
 				{
-					box.setSelected(true);
+					areSelected[i] = boxes[i].isSelected();
+				}
+
+				boolean areAllSelected = isAllTrue(areSelected);
+
+				if(!areAllSelected)
+				{
+					for(JCheckBox box : boxes)
+					{
+						box.setSelected(true);
+					}
+				} else
+				{
+					for(JCheckBox box: boxes)
+					{
+						box.setSelected(false);
+					}
 				}
 			}
 		});
+	}
+
+	private boolean isAllTrue(boolean[] bool)
+	{
+		for(boolean boolv : bool)
+		{
+			if(!boolv)
+			{
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	private void setPanel()
@@ -90,14 +120,22 @@ public class ParameterChooserPanel extends JPanel
 		// FIRST LINE
 		gc.gridy = 0;
 		gc.gridx = 0;
-		gc.anchor = GridBagConstraints.CENTER;
+		gc.anchor = GridBagConstraints.LINE_END;
+		gc.insets = new Insets(0, 0, 0, 10);
 		add(selectAllButton, gc);
 
 		setPanel();
 
+		gc.insets = new Insets(0, 0, 0, 0);
+
 		gc.fill = GridBagConstraints.BOTH;
+		gc.anchor = GridBagConstraints.CENTER;
 
 		parameterPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
+
+		JPanel parPanel = new JPanel();
+		parPanel.setBorder(BorderFactory.createEtchedBorder());
+		parPanel.setLayout(new GridBagLayout());
 
 		// NEXT LINE
 		gc.gridy++;
@@ -107,13 +145,15 @@ public class ParameterChooserPanel extends JPanel
 		JScrollPane scrollPane = new JScrollPane(parameterPanel);
 		scrollPane.setBorder(null);
 		scrollPane.getVerticalScrollBar().setUnitIncrement(4);
-		System.out.println(scrollPane.getVerticalScrollBar().getUnitIncrement());
-		add(scrollPane, gc);
+		parPanel.add(scrollPane, gc);
 
 		// NEXT LINE
 		JPanel panel = new JPanel();
 		gc.gridy++;
 		gc.weighty = (8 - Math.floor(parameters.length / 2));
-		add(panel, gc);
+		parPanel.add(panel, gc);
+
+		gc.weighty = 1;
+		add(parPanel, gc);
 	}
 }
