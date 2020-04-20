@@ -2,6 +2,7 @@ package tiho;
 
 import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -53,7 +54,36 @@ public class ParameterFinder
 			}
 		}
 
+		sortParameters();
+		
 		parameterArray = convertToArray(parameters, parameterArray);
+	}
+	
+	private void sortParameters()
+	{
+		List<String> temp = new ArrayList<String>();
+		for(String str: parameters)
+		{
+			temp.add(str.toLowerCase());
+		}
+		
+		Collections.sort(temp);
+		List<String> temp2 = new ArrayList<String>();
+		
+		for(int i = 0; i < temp.size(); i++)
+		{
+			for(String par: parameters)
+			{
+				if(temp.get(i).equals(par.toLowerCase()))
+				{
+					temp2.add(par);
+				}
+			}
+		}
+		
+		parameters = temp2;
+		
+		System.out.println(parameters);
 	}
 
 	private String[] convertToArray(List<String> parameterList, String[] parameterArray)

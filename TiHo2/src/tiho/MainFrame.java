@@ -31,6 +31,8 @@ public class MainFrame extends JFrame
 	private FileSaver fileSaver;
 
 	private static List<String> prevFiles;
+	
+	private GridBagConstraints gc;
 
 	public MainFrame()
 	{
@@ -78,7 +80,7 @@ public class MainFrame extends JFrame
 					setupParameterPanel(paramFinder.getParameters());
 				} else
 				{
-					System.out.println("alle parameter");
+					// alle Parameter
 				}
 			}
 		});
@@ -86,7 +88,10 @@ public class MainFrame extends JFrame
 
 	private void setupParameterPanel(String[] parameters)
 	{
-		System.out.println("Ein Paar parameter");
+		this.dispose();
+		
+		@SuppressWarnings("unused")
+		ParameterFrame parameterFrame = new ParameterFrame(parameters);
 	}
 
 	private void setProgramLookAndFeel()
@@ -121,7 +126,7 @@ public class MainFrame extends JFrame
 		setLayout(new BorderLayout());
 		framePanel.setLayout(new GridBagLayout());
 
-		GridBagConstraints gc = new GridBagConstraints();
+		gc = new GridBagConstraints();
 
 		gc.weightx = 1;
 		gc.weighty = 1;
