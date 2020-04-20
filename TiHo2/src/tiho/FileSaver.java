@@ -66,6 +66,9 @@ public class FileSaver
 	
 	public void writePrevFile()
 	{
+		createPath();
+		createPrevFile();
+		
 		try
 		{
 			String prevText = readPrevFile();
