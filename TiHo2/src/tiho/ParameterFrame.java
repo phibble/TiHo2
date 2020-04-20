@@ -6,9 +6,12 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
@@ -19,6 +22,9 @@ public class ParameterFrame extends JFrame
 
 	private String[] parameters;
 	private ParameterChooserPanel parameterChooser;
+	
+	private List<String> chosenParametersList;
+	private String[] chosenParameters;
 
 	private JPanel mainPanel;
 	private JButton confirmButton;
@@ -27,7 +33,7 @@ public class ParameterFrame extends JFrame
 	@SuppressWarnings("unused")
 	private ExcelReader exReader;
 
-	public ParameterFrame(String[] parameters, String path)
+	public ParameterFrame(String path, String[] parameters)
 	{
 		this.parameters = parameters;
 		parameterChooser = new ParameterChooserPanel(this.parameters);
@@ -54,12 +60,35 @@ public class ParameterFrame extends JFrame
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				exReader = new ExcelReader(path, parameters);
+				retrieveChosenParameters();
+				exReader = new ExcelReader(path, chosenParameters);
 			}
 		});
 
 		setFrame();
 		setComponentLayout();
+	}
+	
+	private void retrieveChosenParameters()
+	{
+		JCheckBox[] boxes = parameterChooser.getCheckBoxes();
+		
+		chosenParametersList = new ArrayList<String>();
+		
+		for(int i = 0; i < boxes.length; i++)
+		{
+			if(boxes[i].isSelected())
+			{
+				chosenParametersList.add(boxes[i].getText());
+			}
+		}
+		
+		chosenParameters = new String[chosenParametersList.size()];
+		
+		for(int i = 0; i < chosenParameters.length; i++)
+		{
+			chosenParameters[i] = chosenParametersList.get(i);
+		}
 	}
 
 	private void setComponentLayout()

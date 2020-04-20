@@ -156,4 +156,9 @@ public class ParameterChooserPanel extends JPanel
 		gc.weighty = 1;
 		add(parPanel, gc);
 	}
+	
+	public JCheckBox[] getCheckBoxes()
+	{
+		return boxes;
+	}
 }

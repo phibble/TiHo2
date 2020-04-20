@@ -27,6 +27,7 @@ public class MainFrame extends JFrame
 	private String fileAbsolutePath = "";
 	private boolean allParameters = true;
 
+	@SuppressWarnings("unused")
 	private ParameterFinder paramFinder;
 	private FileSaver fileSaver;
 
@@ -83,7 +84,7 @@ public class MainFrame extends JFrame
 				allParameters = choosePanel.isAllParameters();
 				if(!allParameters)
 				{
-					setupParameterPanel(paramFinder.getParameters());
+					setupParameterPanel();
 				} else
 				{
 					String[] options = new String[] { "Ja", "Nein" };
@@ -104,11 +105,11 @@ public class MainFrame extends JFrame
 		});
 	}
 
-	private void setupParameterPanel(String[] parameters)
+	private void setupParameterPanel()
 	{
 		this.dispose();
 
-		this.parameterFrame = new ParameterFrame(parameters, fileAbsolutePath);
+		this.parameterFrame = new ParameterFrame(fileAbsolutePath, paramFinder.getParameters());
 	}
 
 	private void setProgramLookAndFeel()
