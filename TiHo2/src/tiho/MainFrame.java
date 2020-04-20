@@ -31,8 +31,14 @@ public class MainFrame extends JFrame
 	private FileSaver fileSaver;
 
 	private static List<String> prevFiles;
-	
+
 	private GridBagConstraints gc;
+
+	@SuppressWarnings("unused")
+	private ExcelReader exReader;
+
+	@SuppressWarnings("unused")
+	private ParameterFrame parameterFrame;
 
 	public MainFrame()
 	{
@@ -80,7 +86,19 @@ public class MainFrame extends JFrame
 					setupParameterPanel(paramFinder.getParameters());
 				} else
 				{
-					// alle Parameter
+					String[] options = new String[] { "Ja", "Nein" };
+					int response = JOptionPane.showOptionDialog(MainFrame.this,
+							"Wollen Sie das Programm mit allen Parametern starten?", "Start",
+							JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[1]);
+
+					if(response == 0)
+					{
+						exReader = new ExcelReader(fileAbsolutePath);
+					} else if(response == 1)
+					{
+						MainFrame.this.dispose();
+						new MainFrame();
+					}
 				}
 			}
 		});
@@ -89,9 +107,8 @@ public class MainFrame extends JFrame
 	private void setupParameterPanel(String[] parameters)
 	{
 		this.dispose();
-		
-		@SuppressWarnings("unused")
-		ParameterFrame parameterFrame = new ParameterFrame(parameters);
+
+		this.parameterFrame = new ParameterFrame(parameters);
 	}
 
 	private void setProgramLookAndFeel()
