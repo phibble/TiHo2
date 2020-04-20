@@ -6,6 +6,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -58,6 +59,13 @@ public class ChoosePanel extends JPanel
 
 		fileNameModel = new DefaultComboBoxModel<>();
 		fileNameModel.addElement("");
+		List<String> prevFiles = MainFrame.getPrevFiles();
+		
+		for(int i = 0; i < prevFiles.size(); i++)
+		{
+			fileNameModel.addElement(prevFiles.get(i));
+		}
+		
 		fileName.setModel(fileNameModel);
 		fileName.setSelectedIndex(0);
 		fileName.setEditable(true);
@@ -137,7 +145,7 @@ public class ChoosePanel extends JPanel
 
 	public String getFileAbsolutePath()
 	{
-		return fileAbsolutePath;
+		return (String) fileName.getSelectedItem();
 	}
 	
 	public boolean isAllParameters()

@@ -16,7 +16,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class ParameterFinder
 {
-	private FileInputStream f;
+	
 	private XSSFWorkbook workbook;
 	private XSSFSheet sheet;
 
@@ -72,7 +72,7 @@ public class ParameterFinder
 	{
 		try
 		{
-			f = new FileInputStream(path);
+			FileInputStream f = new FileInputStream(path);
 
 			workbook = new XSSFWorkbook(f);
 
