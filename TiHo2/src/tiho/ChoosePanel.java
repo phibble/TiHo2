@@ -67,7 +67,7 @@ public class ChoosePanel extends JPanel
 		}
 		
 		fileName.setModel(fileNameModel);
-		fileName.setSelectedIndex(0);
+		fileName.setSelectedIndex(prevFiles.size() - 1);
 		fileName.setEditable(true);
 		fileName.setPreferredSize(new Dimension(270, 20));
 
