@@ -1,6 +1,9 @@
 package tiho;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -15,50 +18,62 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 public class ExcelReader
 {
 	private String path;
-	
+
 	private XSSFSheet sheet;
 	private XSSFWorkbook workbook;
-	
+	private FileInputStream file;
+
+	@SuppressWarnings("unused")
 	private ExcelWriter exWriter;
-	
+
 	public ExcelReader(String path)
+	{
+		this.path = path;
+
+		getExcelSheet();
+		removeExcelSheets(workbook);
+
+		readExcelFile();
+	}
+	
+	public ExcelReader(String path, String[] parameters)
 	{
 		this.path = path;
 		
 		getExcelSheet();
 		removeExcelSheets(workbook);
 		
-		readExcelFile();
+		readExcelFile(parameters);
 	}
-	
+
 	private void readExcelFile()
 	{
 		Row row = null;
 		Cell cell = null;
-		
+
 		int rowCounter = 0;
 		int cellCounter = 0;
-		
+
 		Probe probe = new Probe();
-		
+
 		for(int rowIterator = 0; rowIterator <= sheet.getLastRowNum(); rowIterator++)
 		{
 			row = sheet.getRow(rowIterator);
-			
+
 			if(isRowEmpty(row))
 			{
 				continue;
 			}
-			
+
 			for(int cellIterator = 0; cellIterator <= row.getLastCellNum(); cellIterator++)
 			{
 				cell = row.getCell(cellIterator);
-				
+
 				if(cell == null)
 				{
 					continue;
 				}
-				
+
 				if(cell.getCellTypeEnum() == CellType.STRING)
 				{
 					if(cell.getStringCellValue().trim().toLowerCase().contains("probe") && rowCounter != 0)
@@ -66,7 +81,7 @@ public class ExcelReader
 						rowCounter = 0;
 						cellCounter = 0;
 					}
-					
+
 					if(rowCounter == 0 && cellCounter == 0)
 					{
 						probe.setNumber(cell.getStringCellValue());
@@ -75,26 +90,105 @@ public class ExcelReader
 						probe.setName(cell.getStringCellValue());
 					} else if(cellCounter == 0 && rowCounter != 0)
 					{
-						writeExcelSheet();
+						writeExcelSheet(row, probe);
 					}
 				}
+				cellCounter++;
 			}
+			cellCounter = 0;
+			rowCounter++;
+		}
+		writeSheet(workbook);
+		closeFile();
+		System.exit(0);
+	}
+	
+	private void readExcelFile(String[] parameters)
+	{
+		Row row = null;
+		Cell cell = null;
+
+		int rowCounter = 0;
+		int cellCounter = 0;
+
+		Probe probe = new Probe();
+
+		for(int rowIterator = 0; rowIterator <= sheet.getLastRowNum(); rowIterator++)
+		{
+			row = sheet.getRow(rowIterator);
+
+			if(isRowEmpty(row))
+			{
+				continue;
+			}
+
+			for(int cellIterator = 0; cellIterator <= row.getLastCellNum(); cellIterator++)
+			{
+				cell = row.getCell(cellIterator);
+
+				if(cell == null)
+				{
+					continue;
+				}
+
+				if(cell.getCellTypeEnum() == CellType.STRING)
+				{
+					if(cell.getStringCellValue().trim().toLowerCase().contains("probe") && rowCounter != 0)
+					{
+						rowCounter = 0;
+						cellCounter = 0;
+					}
+
+					if(rowCounter == 0 && cellCounter == 0)
+					{
+						probe.setNumber(cell.getStringCellValue());
+					} else if(rowCounter == 0 && cellCounter == 1)
+					{
+						probe.setName(cell.getStringCellValue());
+					} else if(cellCounter == 0 && rowCounter != 0)
+					{
+						writeExcelSheet(row, probe, parameters);
+					}
+				}
+				cellCounter++;
+			}
+			cellCounter = 0;
+			rowCounter++;
+		}
+		writeSheet(workbook);
+		closeFile();
+		System.exit(0);
+	}
+	
+	private void closeFile()
+	{
+		try
+		{
+			file.close();
+		} catch(IOException e)
+		{
+			e.printStackTrace();
 		}
 	}
-	
-	private void writeExcelSheet()
+
+	private void writeExcelSheet(Row row, Probe probe)
 	{
-		exWriter = new ExcelWriter();
+		exWriter = new ExcelWriter(row, workbook, probe);
 	}
 	
+	private void writeExcelSheet(Row row, Probe probe, String[] parameters)
+	{
+		exWriter = new ExcelWriter(row, workbook, probe, parameters);
+	}
+
 	private void getExcelSheet()
 	{
 		try
 		{
-			FileInputStream file = new FileInputStream(path);
-			
+			file = new FileInputStream(path);
+
 			workbook = new XSSFWorkbook(file);
-			
+
 			sheet = workbook.getSheetAt(0);
 		} catch(NotOfficeXmlFileException e)
 		{
@@ -107,7 +201,26 @@ public class ExcelReader
 			System.exit(0);
 		}
 	}
-	
+
+	public void writeSheet(XSSFWorkbook workbook)
+	{
+		try
+		{
+			FileOutputStream os = new FileOutputStream(path);
+			workbook.write(os);
+			os.close();
+			JOptionPane.showMessageDialog(new JFrame(), "Die Datei wurde erfolgreich verarbeitet!");
+		} catch(FileNotFoundException e)
+		{
+			JOptionPane.showMessageDialog(new JFrame(), "Die Datei wird bereits von einem anderen Prozess verwendet!");
+			System.exit(0);
+		} catch(Exception e2)
+		{
+			JOptionPane.showMessageDialog(new JFrame(), "Die Datei konnte nicht beschrieben werden!");
+			System.exit(0);
+		}
+	}
+
 	public void removeExcelSheets(XSSFWorkbook workbook)
 	{
 		int noSheet = workbook.getNumberOfSheets() - 1;
@@ -116,7 +229,7 @@ public class ExcelReader
 			workbook.removeSheetAt(i);
 		}
 	}
-	
+
 	public boolean isRowEmpty(Row row)
 	{
 		if(row == null)

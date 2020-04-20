@@ -23,8 +23,11 @@ public class ParameterFrame extends JFrame
 	private JPanel mainPanel;
 	private JButton confirmButton;
 	private JButton backButton;
+	
+	@SuppressWarnings("unused")
+	private ExcelReader exReader;
 
-	public ParameterFrame(String[] parameters)
+	public ParameterFrame(String[] parameters, String path)
 	{
 		this.parameters = parameters;
 		parameterChooser = new ParameterChooserPanel(this.parameters);
@@ -44,6 +47,14 @@ public class ParameterFrame extends JFrame
 			{
 				ParameterFrame.this.dispose();
 				new MainFrame();
+			}
+		});
+
+		confirmButton.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				exReader = new ExcelReader(path, parameters);
 			}
 		});
 

@@ -108,7 +108,7 @@ public class MainFrame extends JFrame
 	{
 		this.dispose();
 
-		this.parameterFrame = new ParameterFrame(parameters);
+		this.parameterFrame = new ParameterFrame(parameters, fileAbsolutePath);
 	}
 
 	private void setProgramLookAndFeel()
