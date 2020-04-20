@@ -13,6 +13,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
 
@@ -22,14 +23,14 @@ public class ParameterFrame extends JFrame
 
 	private String[] parameters;
 	private ParameterChooserPanel parameterChooser;
-	
+
 	private List<String> chosenParametersList;
 	private String[] chosenParameters;
 
 	private JPanel mainPanel;
 	private JButton confirmButton;
 	private JButton backButton;
-	
+
 	@SuppressWarnings("unused")
 	private ExcelReader exReader;
 
@@ -61,20 +62,40 @@ public class ParameterFrame extends JFrame
 			public void actionPerformed(ActionEvent e)
 			{
 				retrieveChosenParameters();
-				exReader = new ExcelReader(path, chosenParameters);
+
+				String par = "";
+
+				for(int i = 0; i < chosenParameters.length; i++)
+				{
+					par += chosenParameters[i] + (i != chosenParameters.length - 1 ? ", " : "");
+				}
+
+				String[] options = new String[] { "Ja", "Nein" };
+				int response = JOptionPane.showOptionDialog(ParameterFrame.this,
+						"Wollen Sie das Programm mit den gewählten Parametern (" + par + ") starten?", "Start",
+						JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[1]);
+
+				if(response == 0)
+				{
+					exReader = new ExcelReader(path, chosenParameters);
+				} else if(response == 1)
+				{
+					ParameterFrame.this.dispose();
+					new ParameterFrame(path, ParameterFrame.this.parameters);
+				}
 			}
 		});
 
 		setFrame();
 		setComponentLayout();
 	}
-	
+
 	private void retrieveChosenParameters()
 	{
 		JCheckBox[] boxes = parameterChooser.getCheckBoxes();
-		
+
 		chosenParametersList = new ArrayList<String>();
-		
+
 		for(int i = 0; i < boxes.length; i++)
 		{
 			if(boxes[i].isSelected())
@@ -82,9 +103,9 @@ public class ParameterFrame extends JFrame
 				chosenParametersList.add(boxes[i].getText());
 			}
 		}
-		
+
 		chosenParameters = new String[chosenParametersList.size()];
-		
+
 		for(int i = 0; i < chosenParameters.length; i++)
 		{
 			chosenParameters[i] = chosenParametersList.get(i);

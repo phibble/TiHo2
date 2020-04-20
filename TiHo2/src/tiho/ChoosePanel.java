@@ -43,6 +43,8 @@ public class ChoosePanel extends JPanel
 		fileNameLabel = new JLabel("Datei: ");
 		searchButton = new JButton("...");
 		fileChooser = new JFileChooser();
+		
+		fileChooser.setFileFilter(new XLSXFilter());
 
 		allRadio = new JRadioButton("mit allen Parametern starten");
 		someRadio = new JRadioButton("Parameter wählen");
